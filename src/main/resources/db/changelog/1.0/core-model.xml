@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create tables for log import" author="claudiu">
+        <createTable tableName="HTTP_REQUESTS">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="REQUEST_IP" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REQUEST_DATE" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REQUEST_METHOD" type="VARCHAR(10)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="REQUEST_URL" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="REQUEST_PROTOCOL" type="CHAR(32)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="RESPONSE_CODE" type="SMALLINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="REQUEST_USER_AGENT" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <createIndex indexName="idx_request_ip"
+                     tableName="HTTP_REQUESTS"
+                     unique="false">
+            <column name="REQUEST_IP" type="VARCHAR(45)"/>
+        </createIndex>
+        <createIndex indexName="idx_request_date"
+                     tableName="HTTP_REQUESTS"
+                     unique="false">
+            <column name="REQUEST_DATE" type="DATETIME"/>
+        </createIndex>
+        <createTable tableName="LOG_PARSE_ERRORS">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ERROR_DATE" type="DATETIME" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOG_LINE" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="PARSE_ERROR" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOG_CONTENT" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create tables for computing repeated requests" author="claudiu">
+        <createTable tableName="SELECTED_HTTP_REQUESTS">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="REQUEST_IP" type="VARCHAR(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SELECTION_REASON" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
