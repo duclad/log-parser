@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class HttpApplication implements Application<HttpRequestsApplicationParameters> {
 
-    private static final Logger logger = LoggerFactory.getLogger(Parser.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpApplication.class);
 
     @Autowired
     Importer<HttpRequestsApplicationParameters> httpRequestsImporter;

@@ -1,5 +1,7 @@
 package ro.duclad.httplog;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ import java.io.LineNumberReader;
 
 @Component
 public class HttpRequestsImporter implements Importer<HttpRequestsApplicationParameters>{
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequestsImporter.class);
 
 
     private final BatchInsert<HttpRequest> requestsBatchInsert;
@@ -49,6 +52,8 @@ public class HttpRequestsImporter implements Importer<HttpRequestsApplicationPar
             }
             requestsBatchInsert.flush();
             exceptionsBatchInsert.flush();
+            logger.info("Sucessfully inserted: "+requestsBatchInsert.getNumberOfRowsInsertedUntilNow());
+            logger.info("Number of errors: "+exceptionsBatchInsert.getNumberOfRowsInsertedUntilNow());
         } catch (IOException e) {
             e.printStackTrace();
         }

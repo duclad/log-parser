@@ -28,6 +28,8 @@ public class BatchInsert<T extends BatchInsertable> {
 
     private int batchSize = 10000;
 
+    private int counter;
+
     @Autowired
     public BatchInsert(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -43,6 +45,7 @@ public class BatchInsert<T extends BatchInsertable> {
             records.add(record);
         } else {
             insertBatch(records.get(0).generateInsert(), records);
+            counter = counter + batchSize;
             records.clear();
             records.add(record);
         }
@@ -54,6 +57,7 @@ public class BatchInsert<T extends BatchInsertable> {
     public void flush() {
         if (!records.isEmpty()) {
             insertBatch(records.get(0).generateInsert(), records);
+            counter = +records.size();
             records.clear();
         }
     }
@@ -78,5 +82,9 @@ public class BatchInsert<T extends BatchInsertable> {
                 return records.size();
             }
         });
+    }
+
+    public int getNumberOfRowsInsertedUntilNow() {
+        return counter;
     }
 }
